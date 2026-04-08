@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ExamTipsActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mẹo Thi Kết Quả Cao"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Mẹo phần lý thuyết"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Các câu có từ 'Bị nghiêm cấm', 'Không được phép' thường là đáp án đúng.\n• Chọn đáp án có từ 'Cơ quan có thẩm quyền'.\n• Ưu tiên các đáp án dài, chi tiết (đối với các câu về đạo đức người lái xe)."
+                android:padding="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="2. Mẹo phần biển báo"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Biển báo cấm: Hình tròn, viền đỏ, nền trắng.\n• Biển nguy hiểm: Hình tam giác, viền đỏ, nền vàng.\n• Biển hiệu lệnh: Hình tròn, nền xanh.\n• Biển chỉ dẫn: Hình vuông hoặc hình chữ nhật, nền xanh."
+                android:padding="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="3. Mẹo phần sa hình"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Thứ tự ưu tiên: Xe chữa cháy > Xe quân sự > Xe công an > Xe cứu thương.\n• Xe nào vào giao lộ trước thì được đi trước.\n• Đường ưu tiên được đi trước."
+                android:padding="8dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Ôn Thi Bằng Lái Xe</string>
+    <string name="motorbike_license">Bằng lái xe máy (A1, A2, A3, A4)</string>
+    <string name="car_license">Bằng lái xe ô tô (B1, B2, C, D, E, F)</string>
+    <string name="select_license_type">Chọn loại bằng lái muốn ôn tập</string>
+
+    <string name="theory_study">Học lý thuyết</string>
+    <string name="traffic_signs">Hệ thống biển báo</string>
+    <string name="mock_test">Thi thử</string>
+    <string name="exam_tips">Mẹo thi kết quả cao</string>
+    <string name="wrong_answers">Các câu hay sai</string>
+</resources>
