@@ -21,6 +21,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".LicenseSelectionActivity"
+            android:exported="false" />
+        <activity
             android:name=".CategoryActivity"
             android:exported="false" />
         <activity
