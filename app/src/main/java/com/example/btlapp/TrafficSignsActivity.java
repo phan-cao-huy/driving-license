@@ -28,7 +28,13 @@ public class TrafficSignsActivity extends AppCompatActivity {
         });
 
         RecyclerView rvTrafficSigns = findViewById(R.id.rvTrafficSigns);
-        List<TrafficSign> signs = TrafficSignRepository.getAllSigns();
+        DatabaseHelper db = new DatabaseHelper(this);
+        List<TrafficSign> signs = db.getAllTrafficSigns();
+        
+        if (signs.isEmpty()) {
+            signs = TrafficSignRepository.getAllSigns();
+        }
+
         rvTrafficSigns.setAdapter(new TrafficSignAdapter(signs));
     }
 

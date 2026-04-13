@@ -23,21 +23,28 @@ public class CategoryActivity extends AppCompatActivity {
         });
 
         String type = getIntent().getStringExtra("LICENSE_TYPE");
+        String licenseClass = getIntent().getStringExtra("LICENSE_CLASS");
+        
         if (type == null) type = "MOTORBIKE";
+        if (licenseClass == null) licenseClass = "A1";
 
         TextView tvTitle = findViewById(R.id.tvCategoryTitle);
-        tvTitle.setText(type.equals("MOTORBIKE") ? "Ôn thi Xe máy" : "Ôn thi Ô tô");
+        tvTitle.setText("Ôn thi hạng " + licenseClass);
 
         final String finalType = type;
+        final String finalClass = licenseClass;
+        
         findViewById(R.id.cardTheory).setOnClickListener(v -> {
             Intent intent = new Intent(this, TheoryActivity.class);
             intent.putExtra("LICENSE_TYPE", finalType);
+            intent.putExtra("LICENSE_CLASS", finalClass);
             startActivity(intent);
         });
 
         findViewById(R.id.cardMockTest).setOnClickListener(v -> {
             Intent intent = new Intent(this, MockTestActivity.class);
             intent.putExtra("LICENSE_TYPE", finalType);
+            intent.putExtra("LICENSE_CLASS", finalClass);
             startActivity(intent);
         });
 

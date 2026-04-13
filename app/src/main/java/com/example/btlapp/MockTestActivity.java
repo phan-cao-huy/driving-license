@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -23,10 +24,12 @@ public class MockTestActivity extends AppCompatActivity {
     private List<Question> questions;
     private int currentIndex = 0;
     private Map<Integer, Integer> userAnswers = new HashMap<>(); // Question Index -> Selected Option
+    private DatabaseHelper dbHelper;
 
     private TextView tvTimer;
     private TextView tvCount;
     private TextView tvContent;
+    private ImageView ivQuestionImage;
     private RadioGroup rgOptions;
     private RadioButton rbA;
     private RadioButton rbB;
@@ -47,6 +50,7 @@ public class MockTestActivity extends AppCompatActivity {
             return insets;
         });
 
+        dbHelper = new DatabaseHelper(this);
         initViews();
         loadMockQuestions();
         startTimer();
@@ -54,7 +58,7 @@ public class MockTestActivity extends AppCompatActivity {
 
         btnNext.setOnClickListener(v -> {
             saveAnswer();
-            if (currentIndex < questions.size() - 1) {
+            if (questions != null && currentIndex < questions.size() - 1) {
                 currentIndex++;
                 displayQuestion();
             }
@@ -78,6 +82,7 @@ public class MockTestActivity extends AppCompatActivity {
         tvTimer = findViewById(R.id.tvTimer);
         tvCount = findViewById(R.id.tvMockQuestionCount);
         tvContent = findViewById(R.id.tvMockQuestionContent);
+        ivQuestionImage = findViewById(R.id.ivMockQuestionImage);
         rgOptions = findViewById(R.id.rgMockOptions);
         rbA = findViewById(R.id.rbMockOptionA);
         rbB = findViewById(R.id.rbMockOptionB);
@@ -89,18 +94,20 @@ public class MockTestActivity extends AppCompatActivity {
     }
 
     private void loadMockQuestions() {
-        String type = getIntent().getStringExtra("LICENSE_TYPE");
-        if (type == null) type = "MOTORBIKE";
+        String licenseClass = getIntent().getStringExtra("LICENSE_CLASS");
+        if (licenseClass == null) licenseClass = "B1";
         
-        List<Question> allQuestions;
-        if (type.equals("MOTORBIKE")) {
-            allQuestions = QuestionRepository.getMotorbikeQuestions();
-        } else {
-            allQuestions = QuestionRepository.getCarQuestions();
+        List<Question> allQuestions = dbHelper.getQuestionsByClass(licenseClass);
+        if (allQuestions.isEmpty()) {
+            if (licenseClass.startsWith("A")) {
+                allQuestions = QuestionRepository.getMotorbikeQuestions();
+            } else {
+                allQuestions = QuestionRepository.getCarQuestions();
+            }
         }
         
         Collections.shuffle(allQuestions);
-        questions = allQuestions.subList(0, Math.min(20, allQuestions.size()));
+        questions = allQuestions.subList(0, Math.min(25, allQuestions.size()));
     }
 
     private void startTimer() {
@@ -121,22 +128,34 @@ public class MockTestActivity extends AppCompatActivity {
     }
 
     private void displayQuestion() {
+        if (questions == null || questions.isEmpty()) return;
+
         Question q = questions.get(currentIndex);
         tvCount.setText("Câu " + (currentIndex + 1) + "/" + questions.size());
         tvContent.setText(q.getContent());
-        rbA.setText(q.getOptionA());
-        rbB.setText(q.getOptionB());
         
-        if (q.getOptionC() != null) {
+        // Handle Image
+        if (q.getImageResId() != null && q.getImageResId() != 0) {
+            ivQuestionImage.setVisibility(View.VISIBLE);
+            ivQuestionImage.setImageResource(q.getImageResId());
+        } else {
+            ivQuestionImage.setVisibility(View.GONE);
+        }
+
+        // Display answers with labels A, B, C, D
+        rbA.setText("A. " + q.getOptionA());
+        rbB.setText("B. " + q.getOptionB());
+        
+        if (q.getOptionC() != null && !q.getOptionC().isEmpty()) {
             rbC.setVisibility(View.VISIBLE);
-            rbC.setText(q.getOptionC());
+            rbC.setText("C. " + q.getOptionC());
         } else {
             rbC.setVisibility(View.GONE);
         }
         
-        if (q.getOptionD() != null) {
+        if (q.getOptionD() != null && !q.getOptionD().isEmpty()) {
             rbD.setVisibility(View.VISIBLE);
-            rbD.setText(q.getOptionD());
+            rbD.setText("D. " + q.getOptionD());
         } else {
             rbD.setVisibility(View.GONE);
         }
@@ -192,7 +211,7 @@ public class MockTestActivity extends AppCompatActivity {
         String resultMessage;
         if (failedCritical) {
             resultMessage = "Bạn đã TRƯỢT do trả lời sai câu hỏi điểm liệt.";
-        } else if (correctCount >= 18) {
+        } else if (correctCount >= 21) {
             resultMessage = "Chúc mừng! Bạn đã ĐẠT (" + correctCount + "/" + questions.size() + ").";
         } else {
             resultMessage = "Bạn không đạt (" + correctCount + "/" + questions.size() + ").";
