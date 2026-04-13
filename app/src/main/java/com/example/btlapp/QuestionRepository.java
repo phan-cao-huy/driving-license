@@ -1,9 +1,13 @@
-package com.example.btlapp
+package com.example.btlapp;
 
-object QuestionRepository {
-    fun getMotorbikeQuestions(): List<Question> {
-        return listOf(
-            Question(
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class QuestionRepository {
+    public static List<Question> getMotorbikeQuestions() {
+        return Arrays.asList(
+            new Question(
                 1,
                 "Phần của đường bộ được sử dụng cho các phương tiện giao thông qua lại là gì?",
                 "1. Lề đường.",
@@ -13,7 +17,7 @@ object QuestionRepository {
                 2,
                 "Phần đường xe chạy là phần của đường bộ được sử dụng cho các phương tiện giao thông qua lại."
             ),
-            Question(
+            new Question(
                 2,
                 "“Làn đường” là gì?",
                 "1. Là một phần của phần đường xe chạy được chia theo chiều dọc của đường, sử dụng cho xe chạy.",
@@ -23,7 +27,7 @@ object QuestionRepository {
                 2,
                 "Làn đường là một phần của phần đường xe chạy được chia theo chiều dọc của đường, có bề rộng đủ cho xe chạy an toàn."
             ),
-            Question(
+            new Question(
                 3,
                 "Người lái xe không được quay đầu xe tại các vị trí nào dưới đây?",
                 "1. Ở phần đường dành cho người đi bộ qua đường.",
@@ -35,12 +39,12 @@ object QuestionRepository {
                 null,
                 true
             )
-        )
+        );
     }
 
-    fun getCarQuestions(): List<Question> {
-        return getMotorbikeQuestions() + listOf(
-            Question(
+    public static List<Question> getCarQuestions() {
+        List<Question> questions = new ArrayList<>(getMotorbikeQuestions());
+        questions.add(new Question(
                 4,
                 "Khi lái xe ô tô dưới trời mưa sát mặt đường có hiện tượng gì?",
                 "1. Tầm nhìn bị hạn chế.",
@@ -49,7 +53,7 @@ object QuestionRepository {
                 null,
                 3,
                 "Trời mưa làm giảm tầm nhìn và mặt đường trơn trượt."
-            )
-        )
+        ));
+        return questions;
     }
 }
