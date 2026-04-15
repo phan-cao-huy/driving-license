@@ -12,7 +12,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "driving_license.db";
-    private static final int DATABASE_VERSION = 6; // Upgraded version for Traffic Sign image name
+    private static final int DATABASE_VERSION = 7; // Upgraded for critical questions logic
 
     // Table Questions
     private static final String TABLE_QUESTIONS = "questions";
@@ -46,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createQuestionsTable = "CREATE TABLE " + TABLE_QUESTIONS + " (" +
-                COLUMN_Q_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_Q_ID + " INTEGER, " + // Removed AUTOINCREMENT to keep JSON ID
                 COLUMN_Q_CONTENT + " TEXT, " +
                 COLUMN_Q_OPTION_A + " TEXT, " +
                 COLUMN_Q_OPTION_B + " TEXT, " +
@@ -80,6 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void addQuestion(Question question, String licenseClass) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(COLUMN_Q_ID, question.getId());
         values.put(COLUMN_Q_CONTENT, question.getContent());
         values.put(COLUMN_Q_OPTION_A, question.getOptionA());
         values.put(COLUMN_Q_OPTION_B, question.getOptionB());
@@ -125,6 +126,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 break;
             case "HAS_IMAGE":
                 selection += " AND (" + COLUMN_Q_IMAGE_NAME + " IS NOT NULL AND " + COLUMN_Q_IMAGE_NAME + " != '')";
+                break;
+            case "CRITICAL":
+                selection += " AND " + COLUMN_Q_IS_CRITICAL + "=1";
+                break;
+            case "CONCEPTS":
+                if (licenseClass.startsWith("A")) {
+                    selection += " AND " + COLUMN_Q_ID + " BETWEEN 1 AND 110";
+                } else {
+                    selection += " AND " + COLUMN_Q_ID + " BETWEEN 1 AND 180";
+                }
                 break;
             default: // ALL
                 break;

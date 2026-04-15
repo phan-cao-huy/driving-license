@@ -15,7 +15,9 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -56,14 +58,9 @@ public class MainActivity extends AppCompatActivity {
             loadQuestionsFromJson(db, "questions_a1_250.json", "A1");
         }
 
-        // Load B1 questions from JSON assets
+        // Load B1 questions from JSON assets (Hạng B)
         if (db.getQuestionsByClass("B1").isEmpty()) {
             loadQuestionsFromJson(db, "questions_b1.json", "B1");
-        }
-
-        // Load B2 questions from JSON assets
-        if (db.getQuestionsByClass("B2").isEmpty()) {
-            loadQuestionsFromJson(db, "questions_b2.json", "B2");
         }
 
         // Load Traffic Signs from JSON assets
@@ -81,11 +78,19 @@ public class MainActivity extends AppCompatActivity {
             is.close();
             String json = new String(buffer, StandardCharsets.UTF_8);
             
+            // Danh sách ID câu hỏi điểm liệt cho Ô tô (60 câu theo luật)
+            Set<Integer> criticalIds = new HashSet<>();
+            if (licenseClass.equals("B1") || licenseClass.equals("B2")) {
+                int[] bCriticals = {17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76};
+                for (int id : bCriticals) criticalIds.add(id);
+            }
+
             JSONArray jsonArray = new JSONArray(json);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
+                int id = obj.getInt("id");
                 
-                // Parse options object
+                // Parse options
                 JSONObject optionsObj = obj.getJSONObject("options");
                 String optionA = optionsObj.optString("A", "");
                 String optionB = optionsObj.optString("B", "");
@@ -99,17 +104,16 @@ public class MainActivity extends AppCompatActivity {
                 else if ("C".equalsIgnoreCase(ansChar)) ansInt = 3;
                 else if ("D".equalsIgnoreCase(ansChar)) ansInt = 4;
 
-                // Get image name if exists
                 String imageName = obj.optString("image", null);
-
-                boolean isCritical = obj.optBoolean("isCritical", false);
                 String content = obj.getString("content");
-                if (content.contains("CÂU LIỆT")) {
-                    isCritical = true;
-                }
+
+                // Logic xác định câu điểm liệt:
+                // 1. Dựa trên danh sách ID quy định
+                // 2. Hoặc dựa trên từ khóa trong nội dung
+                boolean isCritical = criticalIds.contains(id) || content.contains("CÂU LIỆT");
 
                 Question q = new Question(
-                    obj.getInt("id"),
+                    id,
                     content,
                     optionA,
                     optionB,
@@ -117,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
                     optionD,
                     ansInt,
                     obj.optString("explanation", ""),
-                    null, // imageResId
-                    imageName, // imageName from assets
+                    null,
+                    imageName,
                     isCritical
                 );
                 db.addQuestion(q, licenseClass);
@@ -146,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
                 String description = obj.getString("thong_tin");
                 String imageName = obj.getString("image");
                 
-                // Determine category from name or default
                 String category = "Biển báo";
                 if (name.contains("Cấm")) category = "Biển báo cấm";
                 else if (name.contains("nguy hiểm")) category = "Biển báo nguy hiểm";
@@ -156,9 +159,8 @@ public class MainActivity extends AppCompatActivity {
                 TrafficSign sign = new TrafficSign(name, description, imageName, category);
                 db.addTrafficSign(sign);
             }
-            Log.d("DB", "Loaded traffic signs from " + fileName);
         } catch (Exception e) {
-            Log.e("DB", "Error loading traffic signs from " + fileName, e);
+            Log.e("DB", "Error loading traffic signs", e);
         }
     }
 }

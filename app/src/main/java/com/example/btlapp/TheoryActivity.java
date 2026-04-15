@@ -128,8 +128,24 @@ public class TheoryActivity extends AppCompatActivity {
     }
 
     private void showFilterDialog() {
-        String[] options = {"Tất cả", "Đã làm", "Chưa làm", "Câu sai", "Câu đúng", "Câu có biển báo"};
-        String[] filterKeys = {"ALL", "DONE", "NOT_DONE", "WRONG", "CORRECT", "HAS_IMAGE"};
+        String[] options = {
+            "Tất cả", 
+            "Câu hỏi điểm liệt", 
+            "Khái niệm và quy tắc", 
+            "Câu sai", 
+            "Đã làm", 
+            "Chưa làm", 
+            "Câu có hình ảnh"
+        };
+        String[] filterKeys = {
+            "ALL", 
+            "CRITICAL", 
+            "CONCEPTS", 
+            "WRONG", 
+            "DONE", 
+            "NOT_DONE", 
+            "HAS_IMAGE"
+        };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Chọn bộ lọc");
@@ -186,7 +202,7 @@ public class TheoryActivity extends AppCompatActivity {
             ivQuestionImage.setVisibility(View.GONE);
         }
 
-        // Reset
+        // Reset colors
         rbOptionA.setTextColor(Color.BLACK);
         rbOptionB.setTextColor(Color.BLACK);
         rbOptionC.setTextColor(Color.BLACK);
